@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ConfigService } from '@config';
-// import { InConfiguration, AuthService } from '@core';
+import { InConfiguration, AuthService } from '@core';
 import { FeatherIconsComponent } from '@shared/components/feather-icons/feather-icons.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,11 +27,12 @@ import { MatButtonModule } from '@angular/material/button';
   ],
 })
 export class HeaderComponent implements OnInit {
-  // public config!: InConfiguration;
+  public config!: InConfiguration;
   isNavbarCollapsed = true;
   isOpenSidebar?: boolean;
   docElement?: HTMLElement;
   isFullScreen = false;
+  authService: any;
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly renderer: Renderer2,
@@ -40,13 +41,13 @@ export class HeaderComponent implements OnInit {
     // private readonly authService: AuthService,
     private readonly router: Router
   ) {
-    // this.userLogged = this.authService.getAuthFromSessionStorage().nombre;
+    this.userLogged = this.authService.getAuthFromSessionStorage().nombre;
    }
 
    userLogged: string | undefined = '';
    
   ngOnInit() {
-    // this.config = this.configService.configData;
+    this.config = this.configService.configData;
     this.docElement = document.documentElement;
   }
 
@@ -83,7 +84,7 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  // logout() {
-  //   this.authService.logout();
-  // }
+   logout() {
+     this.authService.logout();
+   }
 }

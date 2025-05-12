@@ -1,9 +1,6 @@
-import {
-  Router,
-  NavigationEnd,
-  RouterLink,
-  RouterLinkActive,
-} from '@angular/router';
+import { Router, NavigationEnd, RouterLink, RouterLinkActive } from '@angular/router';
+import { ROUTES } from './sidebar-items';
+
 import { DOCUMENT, NgClass } from '@angular/common';
 import {
   Component,
@@ -14,7 +11,6 @@ import {
   HostListener,
   OnDestroy,
 } from '@angular/core';
-// import { ROUTES } from './sidebar-items';
 // import { AuthService } from '@core';
 import { RouteInfo } from './sidebar.metadata';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -53,6 +49,7 @@ export class SidebarComponent
   currentRoute?: string;
 
   userLogged: string | undefined = '';
+  private _authService: any;
   
   constructor(
     @Inject(DOCUMENT) private readonly _document: Document,
@@ -69,8 +66,8 @@ export class SidebarComponent
         this._renderer.removeClass(this._document.body, 'overlay-open');
       }
     });
-    // const roleInfo = this._authService.getRoleInfoByToken();
-    // this.userLogged = roleInfo ? roleInfo.roleName : undefined;
+     const roleInfo = this._authService.getRoleInfoByToken();
+     this.userLogged = roleInfo ? roleInfo.roleName : undefined;
   }
   @HostListener('window:resize', ['$event'])
   windowResizecall() {
@@ -116,10 +113,10 @@ export class SidebarComponent
   }
 
   ngOnInit() {
-    // const rolAuthority = this._authService.getAuthFromSessionStorage().rol_id;
-    // this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem?.rolAuthority.includes(rolAuthority));
-    // this.initLeftSidebar();
-    // this.bodyTag = this._document.body;
+     const rolAuthority = this._authService.getAuthFromSessionStorage().rol_id;
+     this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem?.rolAuthority.includes(rolAuthority));
+     this.initLeftSidebar();
+     this.bodyTag = this._document.body;
   }
 
 
