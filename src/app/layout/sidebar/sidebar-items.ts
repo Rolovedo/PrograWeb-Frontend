@@ -1,4 +1,4 @@
-import { ROLES } from '@shared/models/enums';
+import { ROLES } from '@core/models/enums';
 import { RouteInfo } from './sidebar.metadata';
 export const ROUTES: RouteInfo[] = [
   {

@@ -41,7 +41,7 @@
     "@types/gapi.auth2": "^0.0.61",
     "angular-feather": "^6.5.1",
     "apexcharts": "^3.49.1",
-    "bootstrap": "^5.3.5",
+    "bootstrap": "^5.3.6",
     "browser-sync": "^3.0.2",
     "chart.js": "^4.4.3",
     "core-js": "^3.37.1",

@@ -9,7 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BreadcrumbComponent } from 'app/shared/components/breadcrumb/breadcrumb.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -101,9 +101,8 @@ export interface User {
       constructor(
         private readonly _formBuilder: FormBuilder, //Crea formularios
         private readonly userService: UserService, //usar el servicio de usuarios
-        private readonly analytics: Analytics,
-        private readonly _snackBar: MatSnackBar,
-        private readonly dialogModel: MatDialog
+        private readonly dialogModel: MatDialog,
+        private readonly _snackBar: MatSnackBar
       ) { }
 
       //inicializa el componente
