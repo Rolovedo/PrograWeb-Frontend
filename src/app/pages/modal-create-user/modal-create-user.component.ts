@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, ReactiveFormsModule, FormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
@@ -71,24 +71,6 @@ export class ModalCreateUserComponent implements OnInit {
       rol_id: [''],
       administrador_id: ['']
     });
-  }
-
-  validatePassword(value: string): void {
-    const password = this.formCreateUser.get('password')?.value;
-    if (password !== value) {
-      this.formCreateUser.controls['confirmPassword'].setErrors({ mismatch: true });
-    } else {
-      this.formCreateUser.controls['confirmPassword'].setErrors(null);
-    }
-  }
-
-  hideAdministratorField(): void {
-    this.showFieldAdministrator = false;
-    this.formCreateUser.get('administrador_id')?.setValue(null);
-  }
-
-  showAdministratorField(): void {
-    this.showFieldAdministrator = true;
   }
 
   getAllAdministrator() {
