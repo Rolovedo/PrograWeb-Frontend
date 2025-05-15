@@ -194,7 +194,7 @@ export interface User {
           maxWidth: '1000px',
           width: '840px',
           disableClose: true,
-          data: userInformation
+          data: { user: userInformation } //se pasa el id ya que para editar es necasrio devolver el id
         });
       
         dialogRef.afterClosed().subscribe(result => {

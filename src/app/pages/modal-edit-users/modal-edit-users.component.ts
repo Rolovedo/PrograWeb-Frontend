@@ -80,6 +80,8 @@ export class ModalEditUsersComponent {
       const userData = this.formUpdateUsers.value;
       const userId = this.data?.user?.id; //Pasa el id del usuario para poder confirmar la edicion de este
       
+      console.log('Datos a enviar:', { userId, userData });
+
       //Llama el userService pasandole el userId y el userData (Datos nuevos)
       this._userService.updateUser(userId, userData).subscribe({
         //Si es exitoso
