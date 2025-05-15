@@ -11,7 +11,7 @@ import {
   HostListener,
   OnDestroy,
 } from '@angular/core';
-// import { AuthService } from '@core';
+import { AuthService } from '@core';
 import { RouteInfo } from './sidebar.metadata';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
@@ -49,13 +49,13 @@ export class SidebarComponent
   currentRoute?: string;
 
   userLogged: string | undefined = '';
-  private _authService: any;
+  //private _authService: any;
   
   constructor(
     @Inject(DOCUMENT) private readonly _document: Document,
     private readonly _renderer: Renderer2,
     public readonly _elementRef: ElementRef,
-    // private readonly _authService: AuthService,
+    private readonly _authService: AuthService,
     private readonly _router: Router,
     private readonly _domSanitizer: DomSanitizer
   ) {

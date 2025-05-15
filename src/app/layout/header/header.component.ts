@@ -32,13 +32,13 @@ export class HeaderComponent implements OnInit {
   isOpenSidebar?: boolean;
   docElement?: HTMLElement;
   isFullScreen = false;
-  authService: any;
+  // authService: any;
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly renderer: Renderer2,
     public readonly elementRef: ElementRef,
     private readonly configService: ConfigService,
-    // private readonly authService: AuthService,
+    private readonly authService: AuthService,
     private readonly router: Router
   ) {
     this.userLogged = this.authService.getAuthFromSessionStorage().nombre;
