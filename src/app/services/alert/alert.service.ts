@@ -14,6 +14,7 @@ export class AlertService {
     placementFrom: MatSnackBarVerticalPosition = 'bottom',
     placementAlign: MatSnackBarHorizontalPosition = 'center'
   ) {
+    //muestra una notificacion usando mat snackbar con color y posicion personalizados
     this._snackBar.open(text, '', {
       duration: 5000,
       verticalPosition: placementFrom,

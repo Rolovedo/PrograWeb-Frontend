@@ -1,3 +1,4 @@
+//importa modulos necesarios de angular y librerias externas
 import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Validators, ReactiveFormsModule, FormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -12,9 +13,11 @@ import { MatDialogActions } from '@angular/material/dialog';
 import { MatDialogTitle } from '@angular/material/dialog';
 import { MatDialogContent } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-// Importación del servicio de proyectos
+
+//importa servicio de proyectos
 import { ProjectService } from '../../services/projects/projects.service';
-// Importa SweetAlert
+
+//importa libreria sweetalert para alertas visuales
 import Swal from 'sweetalert2';
 
 @Component({
@@ -38,25 +41,26 @@ import Swal from 'sweetalert2';
   styleUrls: ['./modal-create-project.component.scss']
 })
 export class ModalCreateProjectComponent implements OnInit {
-  formCreateProject!: FormGroup;
-  categoryValues: any[] = [];
-  clientValues: any[] = [];
+  formCreateProject!: FormGroup; //formulario reactivo para crear proyecto
+  categoryValues: any[] = []; //categorias disponibles
+  clientValues: any[] = []; //clientes disponibles
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private readonly _formBuilder: FormBuilder,
-    private readonly _projectService: ProjectService,
-    private readonly dialogRef: MatDialogRef<ModalCreateProjectComponent>,
-    private readonly _snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: any, //datos inyectados al abrir el modal
+    private readonly _formBuilder: FormBuilder, //constructor de formularios
+    private readonly _projectService: ProjectService, //servicio para gestionar proyectos
+    private readonly dialogRef: MatDialogRef<ModalCreateProjectComponent>, //referencia al modal
+    private readonly _snackBar: MatSnackBar, //componente para mostrar mensajes
   ) {}
 
   ngOnInit(): void {
-    this.createFormProject();
-    this.getAllCategories();
-    this.getAllClients();
+    this.createFormProject(); //inicializa el formulario
+    this.getAllCategories(); //carga categorias disponibles
+    this.getAllClients(); //carga clientes disponibles
   }
 
   createFormProject(): void {
+    //define estructura del formulario con validaciones
     this.formCreateProject = this._formBuilder.group({
       nombre: ['', [Validators.required]],
       descripcion: ['', [Validators.required]],
@@ -70,6 +74,7 @@ export class ModalCreateProjectComponent implements OnInit {
   }
 
   getAllCategories() {
+    //obtiene categorias desde el backend
     this._projectService.getAllCategories().subscribe({
       next: (res) => {
         this.categoryValues = res.categories;
@@ -81,6 +86,7 @@ export class ModalCreateProjectComponent implements OnInit {
   }
 
   getAllClients() {
+    //obtiene clientes desde el backend
     this._projectService.getAllClients().subscribe({
       next: (res) => {
         this.clientValues = res.clients;
@@ -92,11 +98,13 @@ export class ModalCreateProjectComponent implements OnInit {
   }
   
   onSubmit() {
+    //valida si el formulario es invalido
     if (this.formCreateProject.invalid) {
       Swal.fire('Error', 'Por favor completa todos los campos', 'error');
       return;
     }
-  
+
+    //estructura los datos del formulario
     const projectDataInformation = {
       nombre: this.formCreateProject.get('nombre')?.value,
       descripcion: this.formCreateProject.get('descripcion')?.value,
@@ -107,7 +115,8 @@ export class ModalCreateProjectComponent implements OnInit {
       categoria_id: Number(this.formCreateProject.get('categoria_id')?.value),
       cliente_id: Number(this.formCreateProject.get('cliente_id')?.value)
     };
-  
+
+    //envia los datos al backend para crear el proyecto
     this._projectService.createProject(projectDataInformation).subscribe({
       next: (response) => {
         this._snackBar.open(response.message, 'Cerrar', { duration: 5000 });
@@ -115,13 +124,14 @@ export class ModalCreateProjectComponent implements OnInit {
         this.dialogRef.close(true);
       },
       error: (error) => {
-        const errorMessage = error.error?.result || 'Ocurrió un error inesperado. Por favor, intenta nuevamente.';
+        const errorMessage = error.error?.result || 'Ocurrio un error inesperado. Por favor, intenta nuevamente.';
         this._snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
       }
     });
   }
 
   validateDates() {
+    //valida que la fecha de inicio no sea posterior a la fecha fin
     const fechaInicio = new Date(this.formCreateProject.get('fecha_inicio')?.value);
     const fechaFin = new Date(this.formCreateProject.get('fecha_fin')?.value);
     

@@ -8,83 +8,80 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root', //hace que el servicio sea accesible globalmente en la aplicacion
 })
 export class AuthService {
 
-  urlBaseServices: string = URL_SERVICIOS;
+  urlBaseServices: string = URL_SERVICIOS; //url base para los servicios del backend
 
   public get currentUserValue(): User{
-    return this.currentUserSubject.value;
+    return this.currentUserSubject.value; //retorna el valor actual del usuario almacenado
   }
 
-  private readonly currentUserSubject: BehaviorSubject<User>;
-  public currentUser: Observable<User>;
-
+  private readonly currentUserSubject: BehaviorSubject<User>; //almacena el usuario actual de tipo BehaviorSubject
+  public currentUser: Observable<User>; //exponer el usuario actual como un observable publico
 
   constructor(private readonly http: HttpClient, private readonly router: Router) {
-    this.currentUserSubject = new BehaviorSubject<User>({} as User);
-    this.currentUser = this.currentUserSubject.asObservable();
+    this.currentUserSubject = new BehaviorSubject<User>({} as User); //inicializa el BehaviorSubject con un objeto vacio
+    this.currentUser = this.currentUserSubject.asObservable(); //convierte el BehaviorSubject en un observable para otros componentes
   }
-  
-  
 
   login(email: string, password: string): Observable<any> {
-    const endpoint = `${this.urlBaseServices}/api/v1/auth/login`;
-    return this.http.post<any>(endpoint, { email, password });
+    const endpoint = `${this.urlBaseServices}/api/v1/auth/login`; //construye la url de la api para login
+    return this.http.post<any>(endpoint, { email, password }); //realiza la peticion post para autenticar al usuario
   }
 
   isAuthenticated(): boolean {
-    const accessToken = sessionStorage.getItem('accessToken');
-    return accessToken !== null;
+    const accessToken = sessionStorage.getItem('accessToken'); //verifica si hay un token en sessionStorage
+    return accessToken !== null; //devuelve true si el token existe
   }
 
   getAuthFromSessionStorage(): any {
     try {
-      const lsValue = sessionStorage.getItem('accessToken');
+      const lsValue = sessionStorage.getItem('accessToken'); //obtiene el token de sessionStorage
       if (!lsValue) {
-        return undefined;
+        return undefined; //retorna undefined si no hay token
       }
-      const decodedToken: any = jwt.jwtDecode(lsValue);
+      const decodedToken: any = jwt.jwtDecode(lsValue); //decodifica el token usando jwt-decode
 
-      return decodedToken;
+      return decodedToken; //retorna el token decodificado
     } catch (error) {
-      console.error(error);
-      return undefined;
+      console.error(error); //muestra error en consola si algo falla
+      return undefined; //retorna undefined si hay error
     }
   }
 
   setToken(token: string): void {
-    sessionStorage.setItem('token', token);
+    sessionStorage.setItem('token', token); //guarda el token en sessionStorage
   }
 
   logout() {
-    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('token'); //elimina el token del sessionStorage
     this.router.navigate(['/authentication/signin'], {
-      queryParams: {},
+      queryParams: {}, //redirige al login
     });
   }
 
-  getRoleInfoByToken(): { roleId: number, roleName: string } | undefined { // Es el nombre del método. Su objetivo es devolver información del rol del usuario (ID y nombre) que ha sido autenticado.
-    // Indica que el método devolverá un objeto con dos propiedades (roleId y roleName) o undefined si ocurre algún problema (como error o rol no reconocido).
-        try {
-          const decodedToken: any = this.getAuthFromSessionStorage(); // Llama al método getAuthFromSessionStorage() que probablemente obtiene y decodifica el token de sesión del usuario (como un JWT o un objeto de datos). El resultado se guarda en decodedToken.
-          const roleId = decodedToken.rol_id; // Extrae el rol_id desde el token decodificado y lo asigna a la variable roleId.
-          let roleName = '';  // Declara una variable para almacenar el nombre del rol que se asignará dependiendo del roleId.
-    
-          if (roleId === 1) {  // Evalúa el roleId: Si es 1, se considera Administrador. Si es 2, se considera Usuario. Si no es ninguno de esos dos, retorna undefined porque no reconoce el rol.
-            roleName = 'Administrador';
-          } else if (roleId === 2) {
-            roleName = 'Usuario';
-          } else {
-            return undefined;
-          }
-    
-          return { roleId, roleName }; //Si el roleId fue válido (1 o 2), devuelve un objeto con roleId y roleName.
-        } catch (error) { // Si algo sale mal (por ejemplo, el token no existe o no se puede decodificar), se captura el error. Se imprime el error en la consola y el método retorna undefined.
-          console.error(error);
-          return undefined;
-        }
+  getRoleInfoByToken(): { roleId: number, roleName: string } | undefined {
+    //devuelve el rol del usuario autenticado a partir del token decodificado
+    try {
+      const decodedToken: any = this.getAuthFromSessionStorage(); //obtiene y decodifica el token
+      const roleId = decodedToken.rol_id; //extrae el rol del token
+      let roleName = ''; //inicializa el nombre del rol
+
+      if (roleId === 1) {
+        roleName = 'Administrador'; //asigna nombre para rol 1
+      } else if (roleId === 2) {
+        roleName = 'Usuario'; //asigna nombre para rol 2
+      } else {
+        return undefined; //retorna undefined si el rol no es valido
       }
+
+      return { roleId, roleName }; //retorna objeto con rol id y nombre
+    } catch (error) {
+      console.error(error); //muestra error en consola si algo falla
+      return undefined; //retorna undefined si hay error
+    }
+  }
 
 }

@@ -187,7 +187,7 @@ export interface User {
         });
       }
 
-      //madal que actualiza los usuarios
+      //modal que actualiza los usuarios
       openModalUpdateUsers(userInformation: any): void {
         const dialogRef = this.dialogModel.open(ModalEditUsersComponent, {
           minWidth: '300px',

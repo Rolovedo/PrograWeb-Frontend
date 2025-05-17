@@ -4,9 +4,9 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/c
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-@Injectable()
+@Injectable() //marca la clase como inyectable para el sistema de dependencias de angular
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private authenticationService: AuthService) {}
+  constructor(private authenticationService: AuthService) {} //inyecta el servicio de autenticacion
 
   intercept(
     request: HttpRequest<any>,
@@ -15,13 +15,13 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err) => {
         if (err.status === 401) {
-          // auto logout if 401 response returned from api
-          this.authenticationService.logout();
-          location.reload();
+          //auto logout si la api responde con error 401
+          this.authenticationService.logout(); //cerrar sesion del usuario
+          location.reload(); //recarga la pagina para limpiar el estado de la aplicacion
         }
 
-        const error = err.error.message || err.statusText;
-        return throwError(error);
+        const error = err.error.message || err.statusText; //extrae el mensaje de error o el estado por defecto
+        return throwError(error); //lanza el error para que pueda ser manejado 
       })
     );
   }

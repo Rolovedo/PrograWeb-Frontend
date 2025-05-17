@@ -12,9 +12,9 @@ import { MatDialogActions } from '@angular/material/dialog';
 import { MatDialogTitle } from '@angular/material/dialog';
 import { MatDialogContent } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-// Importación corregida del servicio de usuario
+//importacion corregida del servicio de usuario
 import { UserService } from '../../services/users/users.service';
-// Importa SweetAlert
+//importa sweetalert
 import Swal from 'sweetalert2';
 
 @Component({
@@ -63,6 +63,7 @@ export class ModalCreateUserComponent implements OnInit {
   }
 
   createFormUsers(): void {
+    //crea el formulario con los campos necesarios
     this.formCreateUser = this._formBuilder.group({
       nombre: [''],
       email: [''],
@@ -74,6 +75,7 @@ export class ModalCreateUserComponent implements OnInit {
   }
 
   getAllAdministrator() {
+    //obtiene todos los administradores desde el servicio
     this._userService.getAllAdministrator().subscribe({
       next: (res) => {
         this.administratorValues = res.users;
@@ -85,6 +87,7 @@ export class ModalCreateUserComponent implements OnInit {
   }
   
   onChangeRole(event: any) {
+    //oculta o muestra el campo de administrador segun el rol seleccionado
     if (event.value === '1') {
       this.hideAdministratorField();
     } else {
@@ -103,7 +106,7 @@ export class ModalCreateUserComponent implements OnInit {
       nombre: this.formCreateUser.get('nombre')?.value,
       email: this.formCreateUser.get('email')?.value,
       password: this.formCreateUser.get('password')?.value,
-      //se  inicializa con number para no correr el riesgo de que entregue una string
+      //se inicializa con number para no correr el riesgo de que entregue una string
       rol_id: Number(this.formCreateUser.get('rol_id')?.value),
       administrador_id: this.formCreateUser.get('administrador_id')?.value
     };
@@ -119,28 +122,31 @@ export class ModalCreateUserComponent implements OnInit {
       },
       //caso de error si existe al crear el usuario
       error: (error) => {
-        const errorMessage = error.error?.result || 'Ocurrió un error inesperado. Por favor, intenta nuevamente.';
+        const errorMessage = error.error?.result || 'Ocurrio un error inesperado. Por favor, intenta nuevamente.';
         this._snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
       }
     });
   }
 
-  private validatePassword(confirmPassword: string) { // Contraseña de confirmación coincide con la contraseña
+  private validatePassword(confirmPassword: string) {
+    //valida que la confirmacion de la contrasena coincida con la contrasena original
     const password = this.formCreateUser.get('password')?.value;
     if (password !== confirmPassword) {
       this.formCreateUser.get('confirmPassword')?.setErrors({ invalid: true });
     } else {
-      this.formCreateUser.get('confirmPassword')?.setErrors(null); // Si coincide, no hay error
+      this.formCreateUser.get('confirmPassword')?.setErrors(null);
     }
   }
   
-  private showAdministratorField() { // Cuando el rol es diferente de 1, se muestra el campo de administrador
+  private showAdministratorField() {
+    //cuando el rol es diferente de 1, se muestra el campo de administrador
     this.showFieldAdministrator = true;
     this.formCreateUser.get('administrator_id')?.setValidators([Validators.required]);
     this.formCreateUser.get('administrator_id')?.updateValueAndValidity();
   }
   
-  private hideAdministratorField() { // Cuando el rol es 1, no se muestra el campo de administrador / no es requerido
+  private hideAdministratorField() {
+    //cuando el rol es 1, no se muestra el campo de administrador ni es requerido
     this.showFieldAdministrator = false;
     this.formCreateUser.get('administrator_id')?.clearValidators();
     this.formCreateUser.get('administrator_id')?.updateValueAndValidity();
