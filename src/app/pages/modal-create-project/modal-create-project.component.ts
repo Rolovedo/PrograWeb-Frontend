@@ -41,9 +41,8 @@ import Swal from 'sweetalert2';
   styleUrls: ['./modal-create-project.component.scss']
 })
 export class ModalCreateProjectComponent implements OnInit {
-  formCreateProject!: FormGroup; //formulario reactivo para crear proyecto
-  categoryValues: any[] = []; //categorias disponibles
-  clientValues: any[] = []; //clientes disponibles
+  formCreateProject!: FormGroup;
+  administrador_idList: any[] = []; // <-- Add this
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any, //datos inyectados al abrir el modal
@@ -54,49 +53,30 @@ export class ModalCreateProjectComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.createFormProject(); //inicializa el formulario
-    this.getAllCategories(); //carga categorias disponibles
-    this.getAllClients(); //carga clientes disponibles
+    this.createFormProject();
+    this.getAllAdministrator(); 
+  }
+
+  getAllAdministrator() {
+    this._projectService.getAllAdministrator().subscribe({
+      next: (res) => {
+        // Filter users with administrator role (adjust 'rol_id' as needed)
+        this.administrador_idList = (res.users || res.data || res).filter((user: any) => user.rol_id === 1);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 
   createFormProject(): void {
-    //define estructura del formulario con validaciones
     this.formCreateProject = this._formBuilder.group({
       nombre: ['', [Validators.required]],
       descripcion: ['', [Validators.required]],
-      fecha_inicio: ['', [Validators.required]],
-      fecha_fin: ['', [Validators.required]],
-      presupuesto: ['', [Validators.required, Validators.min(0)]],
-      estado: ['', [Validators.required]],
-      categoria_id: ['', [Validators.required]],
-      cliente_id: ['', [Validators.required]]
+      administrador_id: ['', [Validators.required]] 
     });
   }
 
-  getAllCategories() {
-    //obtiene categorias desde el backend
-    this._projectService.getAllCategories().subscribe({
-      next: (res) => {
-        this.categoryValues = res.categories;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
-  }
-
-  getAllClients() {
-    //obtiene clientes desde el backend
-    this._projectService.getAllClients().subscribe({
-      next: (res) => {
-        this.clientValues = res.clients;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
-  }
-  
   onSubmit() {
     //valida si el formulario es invalido
     if (this.formCreateProject.invalid) {
@@ -108,17 +88,20 @@ export class ModalCreateProjectComponent implements OnInit {
     const projectDataInformation = {
       nombre: this.formCreateProject.get('nombre')?.value,
       descripcion: this.formCreateProject.get('descripcion')?.value,
-      fecha_inicio: this.formCreateProject.get('fecha_inicio')?.value,
-      fecha_fin: this.formCreateProject.get('fecha_fin')?.value,
-      presupuesto: Number(this.formCreateProject.get('presupuesto')?.value),
-      estado: this.formCreateProject.get('estado')?.value,
-      categoria_id: Number(this.formCreateProject.get('categoria_id')?.value),
-      cliente_id: Number(this.formCreateProject.get('cliente_id')?.value)
+      administrador_id: this.formCreateProject.get('administrador_id')?.value
     };
 
     //envia los datos al backend para crear el proyecto
     this._projectService.createProject(projectDataInformation).subscribe({
       next: (response) => {
+        //muestra un mensaje de exito con el nombre del administrador
+        const admin = this.administrador_idList.find(admin => admin.id === projectDataInformation.administrador_id);
+        if (admin) {
+          response.message = `Proyecto creado exitosamente para ${admin.nombre}`;
+        } else {
+          response.message = 'Proyecto creado exitosamente';
+        }
+        console.log('Datos enviados:', projectDataInformation);
         this._snackBar.open(response.message, 'Cerrar', { duration: 5000 });
         this.formCreateProject.reset();
         this.dialogRef.close(true);

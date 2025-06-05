@@ -1,0 +1,30 @@
+/*
+ *  Document   : _project.scss
+ *  Author     : RedStar Template
+ *  Description: This scss file for project page style classes
+ */
+.project-tab-box {
+  background: $white;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+.project-progress {
+  height: 10px !important;
+}
+.description {
+  font-size: 14px;
+  color: #0088ff;
+  line-height: 1.5;
+}
+.tab-projects a {
+  color: #948f8f !important;
+  &.active {
+    background-color: #2196f3 !important;
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.2),
+      0 13px 24px -11px rgba(33, 150, 243, 0.6);
+    color: #ffffff !important;
+    border-radius: 30px;
+  }
+}

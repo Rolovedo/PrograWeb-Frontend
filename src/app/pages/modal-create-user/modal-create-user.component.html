@@ -53,7 +53,7 @@
                   <mat-label>Administrador</mat-label>
                   <mat-select formControlName="administrador_id">
                     <mat-option value="">Seleccionar</mat-option>
-                    <ng-container *ngFor="let item of administratorValues; track $index">
+                    <ng-container *ngFor="let item of administratorValues; trackBy: trackByFn">
                       <mat-option [value]="item.id">{{ item.nombre }}</mat-option>
                     </ng-container>
                   </mat-select>
@@ -74,6 +74,5 @@
         </button>
       </mat-dialog-actions>
 </div>
-      
-              
-              
+
+

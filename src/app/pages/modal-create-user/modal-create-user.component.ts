@@ -41,6 +41,10 @@ export class ModalCreateUserComponent implements OnInit {
   formCreateUser!: FormGroup;
   administratorValues: any[] = [];
   showFieldAdministrator: boolean = false;
+  
+  trackByFn(index: number, item: any) {
+    return item.id;
+  }
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -61,7 +65,7 @@ export class ModalCreateUserComponent implements OnInit {
       this.validatePassword(value);
     });
   }
-
+  
   createFormUsers(): void {
     //crea el formulario con los campos necesarios
     this.formCreateUser = this._formBuilder.group({
@@ -87,12 +91,7 @@ export class ModalCreateUserComponent implements OnInit {
   }
   
   onChangeRole(event: any) {
-    //oculta o muestra el campo de administrador segun el rol seleccionado
-    if (event.value === '1') {
-      this.hideAdministratorField();
-    } else {
-      this.showAdministratorField();
-    }
+    this.showAdministratorField();
   }
   
   onSubmit() {
@@ -144,11 +143,5 @@ export class ModalCreateUserComponent implements OnInit {
     this.formCreateUser.get('administrator_id')?.setValidators([Validators.required]);
     this.formCreateUser.get('administrator_id')?.updateValueAndValidity();
   }
-  
-  private hideAdministratorField() {
-    //cuando el rol es 1, no se muestra el campo de administrador ni es requerido
-    this.showFieldAdministrator = false;
-    this.formCreateUser.get('administrator_id')?.clearValidators();
-    this.formCreateUser.get('administrator_id')?.updateValueAndValidity();
-  }
+
 }

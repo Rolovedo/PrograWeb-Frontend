@@ -30,14 +30,20 @@ export class ProjectService {
     return this.http.delete<any>(endpoint);
   }
 
+  getAllAdministrator(): Observable<any> {
+    //obtiene todos los usuarios con rol de administrador
+    const endpoint = `${this.urlBaseServices}/api/v1/users/rol/1`;
+    return this.http.get<any>(endpoint);
+  }
+
   getAllProjects(filters?: any): Observable<any> {
     //obtiene todos los proyectos aplicando filtros opcionales
     const endpoint = `${this.urlBaseServices}/api/v1/projects`;
     const params = new HttpParams({ fromObject: {
       nombre: filters?.nombre || '',
-      estado: filters?.estado || '',
-      categoria_id: filters?.categoria_id || '',
-      cliente_id: filters?.cliente_id || ''
+      descripcion: filters?.descripcion || '',
+      administrador_id: filters?.administrador_id || '',
+      fecha_creacion: filters?.fecha_creacion || ''
     }});
     return this.http.get<any>(endpoint, { params });
   }
@@ -49,38 +55,8 @@ export class ProjectService {
   }
 
   getProjectsByUser(userId: number): Observable<any> {
-    //obtiene todos los proyectos asignados a un usuario especifico
-    const endpoint = `${this.urlBaseServices}/api/v1/projects/user/${userId}`;
-    return this.http.get<any>(endpoint);
-  }
-
-  getAllCategories(): Observable<any> {
-    //obtiene todas las categorias de proyectos
-    const endpoint = `${this.urlBaseServices}/api/v1/categories`;
-    return this.http.get<any>(endpoint);
-  }
-
-  getAllClients(): Observable<any> {
-    //obtiene todos los clientes
-    const endpoint = `${this.urlBaseServices}/api/v1/clients`;
-    return this.http.get<any>(endpoint);
-  }
-
-  assignUserToProject(projectId: number, userData: any): Observable<any> {
-    //asigna un usuario a un proyecto
-    const endpoint = `${this.urlBaseServices}/api/v1/projects/${projectId}/assign-user`;
-    return this.http.post<any>(endpoint, userData);
-  }
-
-  removeUserFromProject(projectId: number, userId: number): Observable<any> {
-    //remueve un usuario de un proyecto
-    const endpoint = `${this.urlBaseServices}/api/v1/projects/${projectId}/remove-user/${userId}`;
-    return this.http.delete<any>(endpoint);
-  }
-
-  getProjectStats(): Observable<any> {
-    //obtiene estadisticas generales de los proyectos
-    const endpoint = `${this.urlBaseServices}/api/v1/projects/stats`;
+    // Returns projects where the user is the administrator
+    const endpoint = `${this.urlBaseServices}/api/v1/projects?administrador_id=${userId}`;
     return this.http.get<any>(endpoint);
   }
 }
