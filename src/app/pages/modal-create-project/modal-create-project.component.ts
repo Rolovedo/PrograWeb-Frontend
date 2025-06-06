@@ -112,7 +112,7 @@ export class ModalCreateProjectComponent implements OnInit {
       }
     });
   }
-
+/*
   validateDates() {
     //valida que la fecha de inicio no sea posterior a la fecha fin
     const fechaInicio = new Date(this.formCreateProject.get('fecha_inicio')?.value);
@@ -131,5 +131,5 @@ export class ModalCreateProjectComponent implements OnInit {
         );
       }
     }
-  }
+  }*/
 }

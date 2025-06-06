@@ -10,118 +10,89 @@
           </app-breadcrumb>
         </div>
         }
-                <div class="project-tab-box mt-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                </div>
-                <form [formGroup]="projectFilterForm" class="row col-md-12 col-lg-12">
-                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6 mb-3">
-                      <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>Nombre</mat-label>
-                        <input matInput formControlName="name" placeholder="Buscar por nombre">
-                      </mat-form-field>
-                    </div>
-                </form>
-                <div class="card p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="font-weight-bold">Lista de proyectos</span>
-                    <button class="btn btn-primary" (click)="openModalCreateProject()">Crear proyecto</button>
-                    </div>
-                    <!--
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Descripción</th>
-                                        <th>Fecha de creación</th>
-                                        <th>Total de usuarios</th>
-                                        <th>Administrador</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let project of filteredProjects; let i = index">
-                                        <td>{{ project.name }}</td>
-                                        <td>{{ project.description }}</td>
-                                        <td>{{ project.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
-                                        <td>{{ project.totalUsers }}</td>
-                                        <td>{{ project.admin }}</td>
-                                        <td>
-                                            <button class="btn btn-link p-0" (click)="viewProjectDetails(project)" title="Ver">
-                                                <mat-icon>visibility</mat-icon>
-                                            </button>
-                                            <button class="btn btn-link p-0" (click)="updateProject(project)" title="Editar">
-                                                <mat-icon>edit</mat-icon>
-                                            </button>
-                                            <button class="btn btn-link p-0 text-danger" (click)="deleteProject(project.id)" title="Eliminar">
-                                                <mat-icon>delete</mat-icon>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        -->
 
-                     <div class="table-responsive">
-                <table mat-table [dataSource]="dataSource" class="w-100">
-                    <mat-spinner *ngIf="isLoading" class="loading-spinner"></mat-spinner>
-
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                        <td mat-cell *matCellDef="let project"> {{ project.name }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="description">
-                        <th mat-header-cell *matHeaderCellDef> Descripción </th>
-                        <td mat-cell *matCellDef="let project"> {{ project.description }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="createdAt">
-                      <th mat-header-cell *matHeaderCellDef width="25%"> Fecha de creación </th>
-                      <td mat-cell *matCellDef="let project"> {{ project.createdAt }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="totalUsers">
-                      <th mat-header-cell *matHeaderCellDef width="25%"> Total de usuarios </th>
-                      <td mat-cell *matCellDef="let project"> {{ project.totalUsers }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="admin">
-                      <th mat-header-cell *matHeaderCellDef width="25%"> Administrador </th>
-                      <td mat-cell *matCellDef="let project"> {{ project.admin }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef width="10%"> Acciones </th>
-                      <td mat-cell *matCellDef="let project">
-                        <button class="btn btn-link p-0" (click)="viewProjectDetails(project)" title="Ver">
-                            <mat-icon>visibility</mat-icon>
-                        </button>
-                        <button class="btn btn-link p-0" (click)="updateProject(project)" title="Editar">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button class="btn btn-link p-0 text-danger" (click)="deleteProject(project.id)" title="Eliminar">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                      </td>
-                    </ng-container>
-                    
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                  </table>
-                  <div *ngIf="dataSource && dataSource.data && dataSource.data.length === 0" class="no-data-message">
-                    No hay información disponible.
+        <div class="project-tab-box mt-4">
+            <div class="card p-3">
+              <form [formGroup]="projectFilterForm" class="mb-3">
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100" appearance="outline">
+                      <mat-label>Buscar por nombre</mat-label>
+                      <input matInput formControlName="name" placeholder="Nombre del proyecto">
+                    </mat-form-field>
                   </div>
-                  
-                    <mat-paginator 
-                        [pageSize]="5" 
-                        showFirstLastButtons 
-                        [pageSizeOptions]="[5, 10, 15]">
-                    </mat-paginator>
-                    <!-- Pagination controls can go here if needed -->
                 </div>
+              </form>
+
+              
+              <div class="materialTableHeader">
+                <div class="left">
+                  <ul class="header-buttons-left ms-0">
+                    <li class="tbl-title">
+                      <h2>Lista proyectos</h2>
+                    </li>
+                  </ul>
                 </div>
-            </div>
+                <div class="right">
+                  <ul class="tbl-export-btn">
+                    <li>
+                      <button mat-flat-button class="bg-cyan" (click)="openModalCreateProject()">Crear proyecto</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+                  <div class="table-responsive">
+                    <table mat-table [dataSource]="dataSource" class="w-100">
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef class="text-center" width="20%">Nombre</th>
+                        <td mat-cell *matCellDef="let project">{{ project.name }}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="description">
+                        <th mat-header-cell *matHeaderCellDef class="text-center" width="30%">Descripción</th>
+                        <td mat-cell *matCellDef="let project">{{ project.description }}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell *matHeaderCellDef class="text-center" width="15%">Fecha de creación</th>
+                        <td mat-cell *matCellDef="let project">{{ project.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="totalUsers">
+                        <th mat-header-cell *matHeaderCellDef class="text-center" width="10%">Total de usuarios</th>
+                        <td mat-cell *matCellDef="let project">{{ project.totalUsers }}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="admin">
+                        <th mat-header-cell *matHeaderCellDef class="text-center" width="15%">Administrador</th>
+                        <td mat-cell *matCellDef="let project">{{ project.admin }}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef class="text-center" width="10%">Acciones</th>
+                        <td mat-cell *matCellDef="let project">
+                          <button mat-icon-button matTooltip="Ver proyecto" class="action-icon" (click)="viewProjectDetails(project)">
+                            <mat-icon>visibility</mat-icon>
+                          </button>
+                          <button mat-icon-button matTooltip="Editar proyecto" class="action-icon" (click)="updateProject(project)">
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button mat-icon-button matTooltip="Eliminar proyecto" class="action-icon delete" (click)="deleteProject(project.id)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <div *ngIf="dataSource && dataSource.data && dataSource.data.length === 0" class="no-data-message text-center p-3">
+                      No hay información disponible.
+                    </div>
+
+                  <mat-paginator 
+                    [pageSize]="5" 
+                    showFirstLastButtons 
+                    [pageSizeOptions]="[5, 10, 15]">
+                  </mat-paginator>
+
+                  </div>
+              </div>
+          </div>
     </div>
 </section>

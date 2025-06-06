@@ -18,6 +18,7 @@ import { ProjectService } from 'app/services/projects/projects.service';
 import { BreadcrumbComponent } from "../../shared/components/breadcrumb/breadcrumb.component";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgModule } from '@angular/core'; 
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 interface Project {
@@ -43,6 +44,7 @@ interface Project {
     FormsModule,
     ReactiveFormsModule,
     MatTableModule,
+    MatTooltipModule,
     BreadcrumbComponent,
     MatProgressSpinnerModule,
     MatPaginatorModule,
@@ -138,7 +140,7 @@ export class ProjectsComponent implements OnInit {
           id: p.id,
           name: p.nombre,
           description: p.descripcion,
-          createdAt: p.fecha_creacion,
+          createdAt: new Date(p.fecha_creacion), // pasa fecha_creacion a Date
           totalUsers: p.totalUsers ?? 0,
           admin: admin ? admin.nombre : 'Sin asignar'
         };
@@ -216,8 +218,20 @@ export class ProjectsComponent implements OnInit {
     if (idx > -1) this.projects[idx] = updated;
   }
 
+  // Funcion para eliminar un proyecto
   deleteProject(id: number): void {
-    this.projects = this.projects.filter(p => p.id !== id);
-    if (this.selectedProject?.id === id) this.selectedProject = null;
+    this.projectService.deleteProject(id).subscribe({
+      next: () => {
+        this.projects = this.projects.filter(p => p.id !== id);
+        this.filteredProjects = this.filteredProjects.filter(p => p.id !== id);
+        this.dataSource.data = this.filteredProjects;
+        // console log del proyecto eliminado
+        console.log(`Proyecto con ID ${id} eliminado`);
+        this._snackBar.open('Proyecto eliminado con éxito', 'Cerrar', { duration: 3000 });
+      },
+      error: () => {
+        this._snackBar.open('Error al eliminar el proyecto', 'Cerrar', { duration: 3000 });
+      }
+    });
   }
 }
